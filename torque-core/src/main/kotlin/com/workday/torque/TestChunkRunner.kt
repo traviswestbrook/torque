@@ -27,13 +27,14 @@ class TestChunkRunner(
     private fun runAndParseTests(chunkTimeoutSeconds: Long, testChunk: TestChunk): Single<List<AdbDeviceTestResult>> {
         val testPackageName = testChunk.testModuleInfo.moduleInfo.apkPackage.value
         val testRunnerClass = testChunk.testModuleInfo.testRunner.value
+        val coverageFileName = testChunk.testMethods.joinToString(",") { it.testName } + ".ec"
         val testMethodsArgs = "-e class " + testChunk.testMethods.joinToString(",") { it.testName }
         val timeout = Timeout(chunkTimeoutSeconds.toInt(), TimeUnit.SECONDS)
 
         return processRunner.runAdb(
                 commandAndArgs = listOf(
                         "-s", adbDevice.id,
-                        "shell", "am instrument -w -r $testMethodsArgs $testPackageName/$testRunnerClass"
+                        "shell", "am instrument -w -r -e coverage true -e coverageFile /sdcard/$coverageFileName $testMethodsArgs $testPackageName/$testRunnerClass"
                 ),
                 timeout = timeout)
                 .ofType(Notification.Start::class.java)

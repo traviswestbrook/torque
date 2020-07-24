@@ -1,4 +1,4 @@
-.gradle
+gs.gradle
 /local.properties
 /.idea/
 *.iml
@@ -8,7 +8,8 @@ build/
 /captures
 /gradle/local.properties
 /docs
-/torque-output*
+/torque-output/
+.gradle/
 
 # Share code style.
 !.idea/codeStyleSettings.xml

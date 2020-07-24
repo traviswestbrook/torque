@@ -11,6 +11,7 @@ buildscript {
 
     dependencies {
         classpath libraries.kotlinGradle
+        classpath 'com.github.jengelman.gradle.plugins:shadow:5.2.0'
         classpath 'com.github.ben-manes:gradle-versions-plugin:0.13.0'
         classpath "org.junit.platform:junit-platform-gradle-plugin:$versions.junitPlatform"
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'

@@ -1,15 +1,29 @@
+import com.github.jengelman.gradle.plugins.shadow.tasks.ConfigureShadowRelocation
+
 apply plugin: 'kotlin'
 apply from: file('../gradle/gradle-mvn-push.gradle')
+apply plugin: 'com.github.johnrengelman.shadow'
 
 repositories {
     google()
 }
 
+shadowJar {
+    zip64 true
+}
+
 dependencies {
-    implementation gradleApi()
+    shadow localGroovy()
+    shadow gradleApi()
     implementation libraries.androidGradlePlugin
     implementation project(internal.torqueCore)
 }
+
+task relocateShadowJar(type: ConfigureShadowRelocation) {
+    target = tasks.shadowJar
+}
+
+tasks.shadowJar.dependsOn tasks.relocateShadowJar
 
 jar {
     manifest {
