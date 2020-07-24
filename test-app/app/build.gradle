@@ -1,0 +1,74 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'com.workday.torque'
+apply plugin: 'jacoco'
+
+jacoco {
+    toolVersion = '0.8.1' //Use latest version
+}
+tasks.withType(Test) {
+    jacoco.includeNoLocationClasses = true
+}
+
+torque {
+    variantName "Debug"
+    args {
+        outputDirectory = "torque-output/"
+        resultFilePath = "torque-result.txt"
+        chunkSize = 1
+        chunkTimeoutSeconds = 150
+        annotations = ["MediumTest"]
+        testFilesPullDeviceDirectory = "/sdcard/coverage"
+        testFilesPullHostDirectory="torque-output/"
+
+    }
+}
+
+
+android {
+    compileSdkVersion 29
+    buildToolsVersion "29.0.3"
+
+    defaultConfig {
+        applicationId "com.workday.torque.app"
+        minSdkVersion 22
+        targetSdkVersion 29
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        debug {
+            testCoverageEnabled true
+        }
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    testOptions {
+        execution 'ANDROIDX_TEST_ORCHESTRATOR'
+        animationsDisabled true
+        unitTests {
+            includeAndroidResources = true
+        }
+    }
+}
+
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation 'androidx.core:core-ktx:1.2.0'
+    implementation 'com.google.android.material:material:1.1.0'
+    implementation 'androidx.annotation:annotation:1.1.0'
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
+    androidTestUtil 'androidx.test:orchestrator:1.2.0'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    androidTestImplementation 'androidx.test:rules:1.2.0'
+}
